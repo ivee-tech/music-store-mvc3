@@ -107,7 +107,8 @@ ipch/
 *.ncb
 *.opendb
 *.opensdf
-*.sdf
+# let's keep SDF
+# *.sdf
 *.cachefile
 *.VC.db
 *.VC.VC.opendb
@@ -197,7 +198,8 @@ PublishScripts/
 # NuGet Symbol Packages
 *.snupkg
 # The packages folder can be ignored because of Package Restore
-**/[Pp]ackages/*
+# normally we would ignore packages, but this is legacy app and we need them
+# **/[Pp]ackages/*
 # except build/, which is used as an MSBuild target.
 !**/[Pp]ackages/build/
 # Uncomment if necessary however generally it will be regenerated when needed
@@ -262,9 +264,10 @@ ServiceFabricBackup/
 *.rptproj.bak
 
 # SQL Server files
-*.mdf
-*.ldf
-*.ndf
+# let's keep them
+# *.mdf
+# *.ldf
+# *.ndf
 
 # Business Intelligence projects
 *.rdl.data
