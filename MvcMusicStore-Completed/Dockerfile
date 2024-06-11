@@ -1,6 +1,6 @@
 # Use Microsoft's official build .NET image.
 # https://hub.docker.com/_/microsoft-dotnet-framework-sdk/
-FROM mcr.microsoft.com/dotnet/framework/sdk:4.8 AS build
+FROM mcr.microsoft.com/dotnet/framework/sdk:4.8-windowsservercore-ltsc2019 AS build
 
 WORKDIR /app
 
@@ -15,10 +15,9 @@ WORKDIR /app
 COPY ./packages/AspNetMVC3Setup.exe ./AspNetMVC3Setup.exe
 
 # Install ASP.NET MVC3
-RUN powershell -Command \
-    Start-Process AspNetMVC3Setup.exe -ArgumentList '/q' -NoNewWindow -Wait;
+RUN .\AspNetMVC3Setup.exe /q
 
-# Copy project files.
+# # Copy project files.
 COPY . ./
 
 # Restore packages.
@@ -29,7 +28,8 @@ RUN msbuild /p:Configuration=Release
 
 # Use Microsoft's official runtime ASP.NET image.
 # https://hub.docker.com/_/microsoft-dotnet-framework-aspnet/
-FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8 AS runtime
+# FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8 AS runtime
+FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8-windowsservercore-ltsc2019 AS runtime
 
 WORKDIR /inetpub/wwwroot
 
@@ -38,9 +38,7 @@ COPY --from=build /app/MvcMusicStore/. ./
 COPY --from=build /app/MvcMusicStore/web.prod.config ./web.config
 
 
-# Configure IIS.
-RUN powershell -NoProfile -Command \
-    Import-module IISAdministration; \
-    New-IISSite -Name "Site" -PhysicalPath C:\inetpub\wwwroot -BindingInformation "*:80:"
-
-# RUN icacls 'C:\inetpub\wwwroot' /grant 'IIS_IUSRS:(OI)(CI)F' /T
+# Configure IIS (only required for aspnet:4.8 image, not aspent:4.8-windowsservercore-ltsc2019).
+# RUN powershell -NoProfile -Command \
+#     Import-module IISAdministration; \
+#     New-IISSite -Name "Site" -PhysicalPath C:\inetpub\wwwroot -BindingInformation "*:80:"

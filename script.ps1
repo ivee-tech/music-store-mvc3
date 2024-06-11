@@ -50,6 +50,7 @@ $registry='ktbacr.azurecr.io'
 $rns='cmf' # namespace
 
 $img="${image}:${tag}"
+# docker tag "${image}:debug" "${image}:latest"
 docker tag "${image}:latest" ${img}
 docker tag ${img} ${registry}/${rns}/${img}
 # requires docker login
